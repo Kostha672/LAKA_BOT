@@ -1,202 +1,95 @@
-
-const config = require('../config')
-const {cmd , commands} = require('../command')
-const os = require("os")
-const {runtime} = require('../lib/functions')
-const axios = require('axios')
+const config = require('../config');
+const { cmd, commands } = require('../command');
+const os = require("os");
+const { runtime } = require('../lib/functions');
+const axios = require('axios');
 
 cmd({
-
     pattern: "menu2",
-
     react: "📜",
-
-    alias: ["panel","commands"],
-
-    desc: "Get bot\'s command list.",
-
+    alias: ["panel", "commands"],
+    desc: "Get bot's command list.",
     category: "main",
-
     use: '.menu',
-
     filename: __filename
+}, async (conn, mek, m, {
+    from, quoted, reply, isGroup
+}) => {
 
-},
-
-async(conn, mek, m,{from, l, quoted, body, isCmd, umarmd, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-
-try{
-let madeMenu = `
+    try {
+        const madeMenu = `
 *╭┈───────────────•*
-
-  👋 HELLO, ${pushname}!
-     
+  👋 HELLO!     
 *╰┈───────────────•*
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━•⟢
-   *ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ*
+   *${config.BOT_NAME}*
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━•⟢
-
-*ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ👨🏻‍💻*
-
-*◆─〈 ${config.BOT_NAME} 〉─◆*
 *╭┈───────────────•* 
 *│  ◦*  *ʀᴜɴᴛɪᴍᴇ* : ${runtime(process.uptime())}
 *│  ◦*  *ᴍᴏᴅᴇ* : *[${config.MODE}]*
 *│  ◦*  *ᴘʀᴇғɪx* : *[${config.PREFIX}]*
-*│  ◦*  *ʀᴀᴍ ᴜsᴇ* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
+*│  ◦*  *ʀᴀᴍ ᴜsᴇ* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB
 *│  ◦*  *ɴᴀᴍᴇ ʙᴏᴛ* : *❖ᴍᴀʟᴀᴋᴀ-ᴍᴅ❖*
 *│  ◦*  *ᴄʀᴇᴀᴛᴏʀ* : *➺ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ࿐*
 *│  ◦*  *ᴠᴇʀsɪᴏɴs* : *ᴠ.2.0.0*
 *╰┈───────────────•*
 *♡︎•━━━━━━☻︎━━━━━━•♡︎*
+╭──────────●●►
+│⛵ *LIST MENU*
+│   ───────
+│ _1_   *OWNER*
+│ _2_   *CONVERT*
+│ _3_   *AI*
+│ _4_   *SEARCH*
+│ _5_   *DOWNLOAD*
+│ _6_   *MATHTOOL*
+│ _7_   *MAIN*
+│ _8_   *GROUP*
+│ _9_   *STICKER*
+│ _10_   *GAME*
+╰───────────●●►
 
-*[ • 📥 DOWNLOADER-CMD 📥 ‎• ]*
-*╭┈───────────────•*
-*┋* *.ғʙ<ᴜʀʟ>*
-*┋* *.ғʙ2 <ᴜʀʟ>*
-*┋* *.ᴠɪᴅᴇᴏ <ᴜʀʟ>*
-*┋* *.ɢᴅʀɪᴠᴇ <ᴜʀʟ>*
-*┋* *.ᴛᴡɪᴛᴛᴇʀ <ᴜʀʟ>*
-*┋* *.ᴛɪᴋᴛᴏᴋ <ᴜʀʟ>*
-*┋* *.ᴍᴇᴅɪᴀғɪʀᴇ <ᴜʀʟ>*
-*┋* *.ꜱᴏɴɢ <ϙᴜᴇʀʏ>*
-*┋* *.ꜱᴏɴɢ2 <ϙᴜᴇʀʏ>*
-*┋* *.ᴛɪᴋᴛᴏᴋ2 <ᴜʀʟ>*
-*┋* *.ɪɢ <ᴜʀʟ>*
-*┋* *.xᴠɪᴅᴇᴏ <ᴜʀʟ>*
-*┋* *.ᴀᴘᴋ <ᴜʀʟ>*
-*┋* *.ᴛᴛꜱ <ᴜʀʟ>*
-*┋* *.ꜱɪɴʜᴀʟᴀꜱᴜᴅ <ᴜʀʟ>*
-*┋* *.ᴅᴀɪꜱᴄᴏᴘᴇ <ᴜʀʟ>*
-*┋* *.ɢɪɴɪꜱɪꜱɪʟᴀ <ᴜʀʟ>*
-*┋* *.ᴍᴏᴠɪᴇ <ᴜʀʟ>*
-*╰┈───────────────•*
-
-*[ • 🔎 SEARCH-CMD 🔍 ‎• ]*
-*╭┈───────────────•*
-*┋* *.ʏᴛꜱ  <ᴛᴇxᴛ>*
-*┋* *.ɪᴍɢ <ᴛᴇxᴛ>*
-*╰┈───────────────•*
-
-*[ • 🧠 AI-CMD 🧠 ‎• ]*
-*╭┈───────────────•*
-*┋* *.ᴀɪ <ᴛᴇxᴛ>*
-*╰┈───────────────•*
-
-*[ • 👨‍💻 OWNER-CMD 👨‍💻 ‎• ]*
-*╭┈───────────────•*
-*┋* *.ꜱʜᴜᴛᴅᴏᴡɴ*
-*┋* *.ʙʀᴏᴀᴅᴄᴀꜱᴛ*
-*┋* *.ꜱᴇᴛᴘᴘ*
-*┋* *.ʙɪᴏᴄᴋ*
-*┋* *.ᴜɴʙʟᴏᴄᴋ*
-*┋* *.ᴄʟᴇᴀʀᴄʜᴀᴛꜱ*
-*┋* *.ᴊɪᴅ*
-*┋* *.ɢᴊɪᴅ*
-*┋* *.ʀᴇꜱᴛᴀʀᴛ*
-*┋* *.ꜱᴇᴛᴀᴜᴛᴏʙɪᴏ*
-*┋* *.ꜱᴇᴛᴛɪɴɢꜱ*
-*┋* *.ᴜᴘᴅᴀᴛᴇ*
-*╰┈───────────────•*
-
-*[ • 👥 GROUP-CMD 👥 ‎• ]*
-*╭┈───────────────•*
-*┋* *.ʀᴇᴍᴏᴠᴇ <ʀᴇᴘʟʏ ғᴏʀ ᴅᴇʟᴇᴛᴇ sᴍs>*
-*┋* *.ᴅᴇʟᴇᴛᴇ <ʀᴇᴘʟʏ ғᴏʀ ᴅᴇʟᴇᴛᴇ sᴍs>*
-*┋* *.ᴀᴅᴅ*
-*┋* *.ᴋɪᴄᴋ*
-*┋* *.sᴇᴛɢᴏᴏᴅʙʏᴇ <ᴛᴇxᴛ>*
-*┋* *.sᴇᴛᴡᴇʟᴄᴏᴍᴇ <ᴛᴇxᴛ>*
-*┋* *.ᴘʀᴏᴍᴏᴛᴇ*
-*┋* *.ᴅᴇᴍᴏᴛᴇ*
-*┋* *.ᴛᴀɢᴀʟʟ*
-*┋* *.ɢᴇᴛᴘɪᴄ*
-*┋* *.ɪɴᴠɪᴛᴇ*
-*┋* *.ʀᴇᴠᴏᴋᴇ*
-*┋* *.ᴊᴏɪɴʀᴇǫᴜᴇsᴛs*
-*┋* *.ᴀʟʟʀᴇǫ*
-*┋* *.ᴍᴜᴛᴇ*
-*┋* *.ᴜɴᴍᴜᴛᴇ*
-*┋* *.ʟᴏᴄᴋɢᴄ*
-*┋* *.ᴜɴʟᴏᴄᴋɢᴄ*
-*┋* *.ʟᴇᴀᴠᴇ*
-*┋* *.ᴜᴘᴅᴀᴛᴇɢɴᴀᴍᴇ*
-*┋* *.ᴜᴘᴅᴀᴛᴇɢᴅᴇsᴄ*
-*┋* *.ᴊᴏɪɴ*
-*┋* *.ʜɪᴅᴇᴛᴀɢ*
-*┋* *.ɢɪɴғᴏ*
-*┋* *.ᴅɪsᴀᴘᴘᴇᴀʀ ᴏɴ*
-*┋* *.ᴅɪsᴀᴘᴘᴇᴀʀ ᴏғғ*
-*┋* *.ᴅɪsᴀᴘᴘᴇᴀʀ 7ᴅ 24ʜ 90ᴅ*
-*┋* *.sᴇɴᴅᴅᴍ*
-*╰┈───────────────•*
-
-*[ • 📃 INFO-CMD 📃 ‎• ]*
-*╭┈───────────────•*
-*┋* *.ᴍᴇɴᴜ*
-*┋* *.ᴍᴇɴᴜ2*
-*┋* *.ᴍᴇɴᴜ3*
-*┋* *.ᴀʙᴏᴜᴛ*
-*┋* *.sᴄʀɪᴘᴛ*
-*┋* *.ʀᴇᴘᴏ*
-*┋* *.ᴀʟɪᴠᴇ*
-*┋* *.ʙᴏᴛɪɴꜰᴏ*
-*┋* *.ꜱᴛᴀᴛᴜꜱ*
-*┋* *.ꜱᴜᴘᴘᴏʀᴛ*
-*┋* *.ᴘɪɴɢ*
-*┋* *.ᴘɪɴɢ2*
-*┋* *.ꜱʏꜱᴛᴇᴍ*
-*╰┈───────────────•*
-
-*[ • 🎡 CONVERTER-CMD 🎡 ‎• ]*
-*╭┈───────────────•*
-*┋* *.sᴛɪᴄᴋᴇʀ*
-*┋* *.ᴛʀᴛ <ᴛᴇxᴛ>*
-*┋* *.ᴛᴛs <ᴛᴇxᴛ>*
-*╰┈───────────────•*
-
-*[ • 🥂 RANDOM-CMD 🥂 ‎• ]*
-*╭┈───────────────•*
-*┋* *.ᴋɪɴɢ*
-*┋* *.ᴅᴏɢ*
-*┋* *.ᴀɴɪᴍᴇ*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ1*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ2*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ3*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ4*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ5*
-*╰┈───────────────•*
-
-*[ • 🏜️ WALLPAPERS-CMD 🏜️ ‎• ]*
-*╭┈───────────────•*
-*┋* *.ɪᴍɢ*
-*╰┈───────────────•*
-
-*[ • 🌐 OTHER-CMD 🌐 ‎• ]*
-*╭┈───────────────•*
-*┋* *.ᴛʀᴛ*
-*┋* *.ᴊᴏᴋᴇ*
-*┋* *.ꜰᴀᴄᴛ*
-*┋* *.ɢɪᴛʜᴜʙꜱᴛᴀʟᴋ*
-*┋* *.ɢᴘᴀꜱꜱ*
-*┋* *.ʜᴀᴄᴋ*
-*┋* *.ǫᴜᴏᴛᴇ*
-*┋* *.ꜱʀᴇᴘᴏ*
-*┋* *.ᴅᴇꜰɪɴᴇ*
-*╰┈───────────────•*
-
-*❒⁠⁠⁠⁠▭▬▭▬▭▬▭▬▭▬▭▬▭❒*⁠⁠⁠⁠
-
-*•────────────•⟢*
+*🌟 Reply the Number you want to select*
 > © ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴀʟᴀᴋᴀ-ᴍᴅ
 *•────────────•⟢*
-`
+`;
 
-await conn.sendMessage(from,{image:{url:config.ALIVE_IMG},caption:madeMenu},{quoted:mek})
+        await conn.sendMessage(from, {
+            image: { url: config.ALIVE_IMG },
+            caption: madeMenu
+        }, { quoted: mek });
 
-}catch(e){
+        const messageId = mek.key.id;
+
+        bot.ev.on("messages.upsert", async (messageUpdate) => {
+            const message = messageUpdate.messages[0];
+            if (!message || !message.message) return;
+
+            const text = message.message.conversation || message.message.extendedTextMessage?.text;
+            const senderId = message.key.remoteJid;
+            const isReplyToBot = message.message.extendedTextMessage?.contextInfo?.stanzaId === messageId;
+
+            if (!isReplyToBot) return;
+
+            try {
+                switch (text) {
+                    case '1':
+                        await conn.sendMessage(senderId, {
+                            image: { url: "https://i.ibb.co/QNwLWTN/20241201-230018.jpg" },
+                            caption: "Owner Menu."
+                        }, { quoted: message });
+                        break;
+                    case '2':
+                        await conn.sendMessage(senderId, {
+                            image: { url: "https://i.ibb.co/QNwLWTN/20241201-230018.jpg" },
+                            caption: "Convert Menu"
+                        }, { quoted: message });
+                        break;
+                    default:
+                        await conn.sendMessage(senderId, { text: "Invalid option. Please try again!" }, { quoted: message });
+                }
+            }catch(e){
 console.log(e)
 reply(`${e}`)
-}
-})
+            }
+        });
